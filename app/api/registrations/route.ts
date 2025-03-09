@@ -1,23 +1,11 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Registration from '../../../models/Registration';
-
-interface RegistrationData {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  gender: string;
-  gradeLevel: string;
-  address: string;
-  description?: string;
-  createdAt: string;
-}
+import Registration, { IRegistration } from '../../../models/Registration';
 
 export async function GET() {
   try {
     await connectDB();
-    const registrations = await Registration.find<RegistrationData>({})
+    const registrations = await Registration.find<IRegistration>({})
       .sort({ createdAt: -1 })
       .lean()
       .exec();

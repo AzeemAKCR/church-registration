@@ -1,6 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-const RegistrationSchema = new mongoose.Schema({
+export interface IRegistration extends Document {
+  firstName: string;
+  lastName: string;
+  age: number;
+  gender: 'male' | 'female';
+  gradeLevel: string;
+  address: string;
+  description?: string;
+  createdAt: Date;
+}
+
+const RegistrationSchema = new Schema<IRegistration>({
   firstName: {
     type: String,
     required: true,
@@ -33,6 +44,10 @@ const RegistrationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+}, {
+  timestamps: true,
 });
 
-export default mongoose.models.Registration || mongoose.model('Registration', RegistrationSchema);
+const Registration = mongoose.models.Registration || mongoose.model<IRegistration>('Registration', RegistrationSchema);
+
+export default Registration;
