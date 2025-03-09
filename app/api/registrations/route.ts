@@ -2,15 +2,22 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Registration from '../../../models/Registration';
 
-interface MongoDBError extends Error {
-  name: string;
-  code?: number;
+interface RegistrationData {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  gender: string;
+  gradeLevel: string;
+  address: string;
+  description?: string;
+  createdAt: string;
 }
 
 export async function GET() {
   try {
     await connectDB();
-    const registrations = await Registration.find({})
+    const registrations = await Registration.find<RegistrationData>({})
       .sort({ createdAt: -1 })
       .lean()
       .exec();
@@ -19,16 +26,18 @@ export async function GET() {
   } catch (error) {
     console.error('Failed to fetch registrations:', error);
 
-    // Handle specific MongoDB errors
     if (error instanceof Error) {
-      const mongoError = error as MongoDBError;
-      
-      if (mongoError.name === 'MongooseServerSelectionError') {
+      if (error.name === 'MongooseServerSelectionError') {
         return NextResponse.json(
           { error: "Database connection timeout. Please try again." },
           { status: 504 }
         );
       }
+
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(

@@ -3,15 +3,20 @@ import type { NextRequest } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Registration from '../../../models/Registration';
 
-interface MongoDBError extends Error {
-  name: string;
-  code?: number;
+interface RegistrationData {
+  firstName: string;
+  lastName: string;
+  age: number;
+  gender: string;
+  gradeLevel: string;
+  address: string;
+  description?: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
-    const data = await request.json();
+    const data: RegistrationData = await request.json();
     
     const registration = await Registration.create(data);
     
@@ -22,23 +27,25 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Registration error:', error);
     
-    // Handle specific MongoDB errors
     if (error instanceof Error) {
-      const mongoError = error as MongoDBError;
-      
-      if (mongoError.name === 'MongooseServerSelectionError') {
+      if (error.name === 'MongooseServerSelectionError') {
         return NextResponse.json(
           { error: "Database connection timeout. Please try again." },
           { status: 504 }
         );
       }
       
-      if (mongoError.name === 'ValidationError') {
+      if (error.name === 'ValidationError') {
         return NextResponse.json(
           { error: "Invalid registration data" },
           { status: 400 }
         );
       }
+
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(
