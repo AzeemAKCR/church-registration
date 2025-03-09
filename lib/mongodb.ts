@@ -1,23 +1,29 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vbs';
-
-if (!MONGODB_URI) {
+if (!process.env.MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable');
 }
 
-let isConnected = false;
+const MONGODB_URI: string = process.env.MONGODB_URI;
 
-async function connectDB() {
-  if (isConnected) {
-    return;
-  }
+const options: mongoose.ConnectOptions = {
+  bufferCommands: true,
+  autoCreate: true,
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+};
 
+async function connectDB(): Promise<void> {
   try {
-    await mongoose.connect(MONGODB_URI);
-    isConnected = true;
+    if (mongoose.connection.readyState === 1) {
+      console.log('Using existing MongoDB connection');
+      return;
+    }
+
+    await mongoose.connect(MONGODB_URI, options);
     console.log('Connected to MongoDB');
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error connecting to MongoDB:', error);
     throw error;
   }

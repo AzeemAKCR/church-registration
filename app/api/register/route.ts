@@ -14,8 +14,24 @@ export async function POST(request: NextRequest) {
       registration 
     }, { status: 201 });
 
-  } catch (err) {
-    console.error('Registration error:', err);
+  } catch (error: any) {
+    console.error('Registration error:', error);
+    
+    // Handle specific MongoDB errors
+    if (error.name === 'MongooseServerSelectionError') {
+      return NextResponse.json(
+        { error: "Database connection timeout. Please try again." },
+        { status: 504 }
+      );
+    }
+    
+    if (error.name === 'ValidationError') {
+      return NextResponse.json(
+        { error: "Invalid registration data" },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to register" },
       { status: 500 }
