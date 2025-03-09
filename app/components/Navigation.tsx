@@ -11,22 +11,25 @@ export default function Navigation() {
   return (
     <AppBar position="static" sx={{ backgroundColor: '#1a237e', marginBottom: 4 }}>
       <Container maxWidth="lg">
-        <Toolbar sx={{ justifyContent: 'space-between', flexDirection: { xs: 'column', sm: 'row' }, py: 2 }}>
+        <Toolbar sx={{ 
+          justifyContent: 'center', 
+          flexDirection: { xs: 'column', sm: 'row' }, 
+          py: { xs: 1.5, sm: 2 }
+        }}>
           <Box sx={{ 
             display: 'flex', 
             alignItems: 'center',
-            mb: { xs: 2, sm: 0 },
-            gap: 2
+            mb: { xs: 1, sm: 0 }
           }}>
             <Link href="/" style={{ textDecoration: 'none', color: 'white' }}>
               <Box sx={{ 
                 display: 'flex',
                 alignItems: 'center',
-                gap: 3
+                gap: { xs: 2, sm: 3 }
               }}>
                 <Box sx={{
-                  width: '80px',
-                  height: '80px',
+                  width: { xs: '45px', sm: '65px' },
+                  height: { xs: '45px', sm: '65px' },
                   position: 'relative',
                   borderRadius: '50%',
                   border: '2px solid white',
@@ -43,13 +46,13 @@ export default function Navigation() {
                   />
                 </Box>
                 <Typography 
+                  variant="h5"
                   sx={{ 
                     color: 'white',
                     fontWeight: 600,
-                    fontSize: { xs: '1.2rem', sm: '1.5rem' },
-                    letterSpacing: '0.5px',
-                    lineHeight: 1.2,
-                    maxWidth: '300px'
+                    letterSpacing: { xs: '0.5px', sm: '1px' },
+                    whiteSpace: 'nowrap',
+                    fontSize: { xs: '0.85rem', sm: '1.4rem' }
                   }}
                 >
                   PUTHU KIRUBAI DEVA SABHAI
@@ -57,8 +60,7 @@ export default function Navigation() {
               </Box>
             </Link>
           </Box>
-          
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          {/* <Box sx={{ display: 'flex', gap: 2 }}>
             <Link href="/" passHref style={{ textDecoration: 'none' }}>
               <Button 
                 color="inherit" 
@@ -85,7 +87,7 @@ export default function Navigation() {
                 View Registrations
               </Button>
             </Link>
-          </Box>
+          </Box> */}
         </Toolbar>
       </Container>
     </AppBar>
