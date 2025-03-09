@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Registration from '../../../models/Registration';
-import { MongooseError } from 'mongoose';
 
 interface MongoDBError extends Error {
   name: string;

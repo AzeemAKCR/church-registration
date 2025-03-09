@@ -14,6 +14,11 @@ const options: mongoose.ConnectOptions = {
   socketTimeoutMS: 45000,
 };
 
+interface MongoDBError extends Error {
+  name: string;
+  code?: number;
+}
+
 async function connectDB(): Promise<void> {
   try {
     if (mongoose.connection.readyState === 1) {
@@ -23,8 +28,12 @@ async function connectDB(): Promise<void> {
 
     await mongoose.connect(MONGODB_URI, options);
     console.log('Connected to MongoDB');
-  } catch (error: any) {
-    console.error('Error connecting to MongoDB:', error);
+  } catch (error) {
+    if (error instanceof Error) {
+      const mongoError = error as MongoDBError;
+      console.error('Error connecting to MongoDB:', mongoError.message);
+      throw mongoError;
+    }
     throw error;
   }
 }
