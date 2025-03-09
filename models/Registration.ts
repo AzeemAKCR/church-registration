@@ -1,20 +1,6 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-export interface IRegistration {
-  firstName: string;
-  lastName: string;
-  age: number;
-  gender: 'male' | 'female';
-  gradeLevel: string;
-  address: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface IRegistrationDocument extends IRegistration, Document {}
-
-const RegistrationSchema = new Schema<IRegistrationDocument>({
+const RegistrationSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
@@ -47,6 +33,19 @@ const RegistrationSchema = new Schema<IRegistrationDocument>({
   timestamps: true,
 });
 
-const Registration = (mongoose.models.Registration || mongoose.model<IRegistrationDocument>('Registration', RegistrationSchema)) as Model<IRegistrationDocument>;
+export type Registration = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  gender: 'male' | 'female';
+  gradeLevel: string;
+  address: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export default Registration;
+const RegistrationModel = mongoose.models.Registration || mongoose.model('Registration', RegistrationSchema);
+
+export default RegistrationModel;

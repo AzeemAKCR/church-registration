@@ -1,14 +1,27 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Registration, { IRegistrationDocument } from '../../../models/Registration';
+import RegistrationModel, { Registration } from '../../../models/Registration';
 
 export async function GET() {
   try {
     await connectDB();
-    const registrations = await Registration.find()
+    const docs = await RegistrationModel.find()
       .sort({ createdAt: -1 })
       .lean()
       .exec();
+
+    const registrations = docs.map(doc => ({
+      _id: String(doc._id),
+      firstName: String(doc.firstName),
+      lastName: String(doc.lastName),
+      age: Number(doc.age),
+      gender: String(doc.gender) as 'male' | 'female',
+      gradeLevel: String(doc.gradeLevel),
+      address: String(doc.address),
+      description: doc.description ? String(doc.description) : undefined,
+      createdAt: new Date(doc.createdAt).toISOString(),
+      updatedAt: new Date(doc.updatedAt).toISOString()
+    } satisfies Registration));
 
     return NextResponse.json({ registrations });
   } catch (error) {

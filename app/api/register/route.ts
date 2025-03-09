@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import connectDB from '@/lib/mongodb';
-import Registration, { IRegistration } from '../../../models/Registration';
+import RegistrationModel, { Registration } from '../../../models/Registration';
 
-type RegistrationInput = Omit<IRegistration, 'createdAt' | 'updatedAt'>;
+type RegistrationInput = Omit<Registration, '_id' | 'createdAt' | 'updatedAt'>;
 
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
     const data = await request.json() as RegistrationInput;
     
-    const registration = await Registration.create(data);
+    const registration = await RegistrationModel.create(data);
     
     return NextResponse.json({ 
       registration 
