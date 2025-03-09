@@ -1,49 +1,59 @@
+'use client';
 import { useState } from 'react';
 import {
   Box,
   TextField,
+  Button,
+  Grid,
+  Paper,
   Typography,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Select,
-  MenuItem,
   FormControl,
   InputLabel,
-  Button,
-  Container,
-  Paper,
-  Snackbar,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
   Alert,
+  CircularProgress
 } from '@mui/material';
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  age: string;
+  gender: string;
+  gradeLevel: string;
+  address: string;
+  description: string;
+}
+
+const initialFormData: FormData = {
+  firstName: '',
+  lastName: '',
+  age: '3',
+  gender: 'male',
+  gradeLevel: '',
+  address: '',
+  description: ''
+};
+
 export default function SignupForm() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    age: 3,
-    gender: 'male',
-    gradeLevel: '',
-    address: '',
-    description: ''
-  });
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null);
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error'
-  });
-
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       [name]: value
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
@@ -53,253 +63,163 @@ export default function SignupForm() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error('Registration failed');
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus({
+          success: true,
+          message: 'Registration successful!'
+        });
+        setFormData(initialFormData);
+      } else {
+        setSubmitStatus({
+          success: false,
+          message: data.error || 'Registration failed. Please try again.'
+        });
       }
-
-      setSnackbar({
-        open: true,
-        message: 'Registration successful!',
-        severity: 'success'
+    } catch {
+      setSubmitStatus({
+        success: false,
+        message: 'Registration failed. Please try again.'
       });
-
-      // Reset form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        age: 3,
-        gender: 'male',
-        gradeLevel: '',
-        address: '',
-        description: ''
-      });
-
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: 'Failed to register. Please try again.',
-        severity: 'error'
-      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   return (
-    <Container maxWidth="md">
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          p: 4, 
-          mt: 4,
-          borderRadius: 2,
-          background: 'linear-gradient(to bottom, #ffffff, #f5f5f5)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
-        }}
-      >
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          gutterBottom 
-          sx={{ 
-            color: '#1a237e', 
-            textAlign: 'center', 
-            mb: 4,
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: '-10px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '60px',
-              height: '4px',
-              backgroundColor: '#1a237e',
-              borderRadius: '2px'
-            }
-          }}
-        >
+    <Box sx={{ maxWidth: 600, mx: 'auto', p: 2 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h5" gutterBottom align="center" sx={{ mb: 4 }}>
           Vacation Bible School Signup
         </Typography>
 
-        <Box 
-          component="form" 
-          onSubmit={handleSubmit} 
-          sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: 3,
-            '& .MuiTextField-root': {
-              '& .MuiOutlinedInput-root': {
-                '&:hover fieldset': {
-                  borderColor: '#1a237e',
-                },
-              },
-            },
-            '& .MuiRadio-root': {
-              color: '#1a237e',
-            },
-            '& .MuiFormControl-root': {
-              '& .MuiOutlinedInput-root': {
-                '&:hover fieldset': {
-                  borderColor: '#1a237e',
-                },
-              },
-            }
-          }}
-        >
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <TextField
-              fullWidth
-              label="First Name"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              fullWidth
-              label="Last Name"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-            />
-          </Box>
-
-          <FormControl fullWidth>
-            <InputLabel>Age</InputLabel>
-            <Select
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              label="Age"
-              required
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 250,
-                  },
-                },
-              }}
-            >
-              {Array.from({ length: 16 }, (_, i) => i + 3).map((age) => (
-                <MenuItem key={age} value={age}>
-                  {age} years
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl>
-            <Typography variant="subtitle1" gutterBottom>Gender</Typography>
-            <RadioGroup
-              row
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-            >
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel value="female" control={<Radio />} label="Female" />
-            </RadioGroup>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>Class</InputLabel>
-            <Select
-              name="gradeLevel"
-              value={formData.gradeLevel}
-              onChange={handleChange}
-              label="Class"
-              required
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 250,
-                  },
-                },
-              }}
-            >
-              <MenuItem value="1">Class 1</MenuItem>
-              <MenuItem value="2">Class 2</MenuItem>
-              <MenuItem value="3">Class 3</MenuItem>
-              <MenuItem value="4">Class 4</MenuItem>
-              <MenuItem value="5">Class 5</MenuItem>
-              <MenuItem value="6">Class 6</MenuItem>
-              <MenuItem value="7">Class 7</MenuItem>
-              <MenuItem value="8">Class 8</MenuItem>
-              <MenuItem value="9">Class 9</MenuItem>
-              <MenuItem value="10">Class 10</MenuItem>
-              <MenuItem value="11">Class 11</MenuItem>
-              <MenuItem value="12">Class 12</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            fullWidth
-            label="Home Address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-            multiline
-            rows={3}
-            placeholder="Area, Block, Street, building number"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& textarea': {
-                  lineHeight: '1.5'
-                }
-              }
-            }}
-          />
-
-          <TextField
-            fullWidth
-            label="Comments"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            multiline
-            rows={4}
-          />
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            sx={{ 
-              mt: 2,
-              background: 'linear-gradient(45deg, #1a237e 30%, #3949ab 90%)',
-              boxShadow: '0 3px 5px 2px rgba(26, 35, 126, .3)',
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: '0 6px 10px 4px rgba(26, 35, 126, .3)',
-              }
-            }}
+        {submitStatus && (
+          <Alert 
+            severity={submitStatus.success ? "success" : "error"}
+            sx={{ mb: 3 }}
           >
-            Submit Registration
-          </Button>
-        </Box>
-      </Paper>
+            {submitStatus.message}
+          </Alert>
+        )}
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Container>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                label="First Name"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                label="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required>
+                <InputLabel>Age</InputLabel>
+                <Select
+                  name="age"
+                  value={formData.age}
+                  label="Age"
+                  onChange={handleChange}
+                >
+                  {Array.from({ length: 16 }, (_, i) => i + 3).map((age) => (
+                    <MenuItem key={age} value={age.toString()}>{age} years</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required>
+                <InputLabel>Gender</InputLabel>
+                <Select
+                  name="gender"
+                  value={formData.gender}
+                  label="Gender"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth required>
+                <InputLabel>Class</InputLabel>
+                <Select
+                  name="gradeLevel"
+                  value={formData.gradeLevel}
+                  label="Class"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="1">Class 1</MenuItem>
+                  <MenuItem value="2">Class 2</MenuItem>
+                  <MenuItem value="3">Class 3</MenuItem>
+                  <MenuItem value="4">Class 4</MenuItem>
+                  <MenuItem value="5">Class 5</MenuItem>
+                  <MenuItem value="6">Class 6</MenuItem>
+                  <MenuItem value="7">Class 7</MenuItem>
+                  <MenuItem value="8">Class 8</MenuItem>
+                  <MenuItem value="9">Class 9</MenuItem>
+                  <MenuItem value="10">Class 10</MenuItem>
+                  <MenuItem value="11">Class 11</MenuItem>
+                  <MenuItem value="12">Class 12</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                label="Home Address"
+                name="address"
+                multiline
+                rows={3}
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Comments"
+                name="description"
+                multiline
+                rows={4}
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                size="large"
+                disabled={isSubmitting}
+                sx={{ mt: 2 }}
+              >
+                {isSubmitting ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  'Submit Registration'
+                )}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Box>
   );
 }

@@ -1,13 +1,9 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { AppBar, Toolbar, Button, Container, Box, Typography } from '@mui/material';
-import { HowToReg, List } from '@mui/icons-material';
+import { AppBar, Toolbar, Container, Box, Typography } from '@mui/material';
 
 export default function Navigation() {
-  const pathname = usePathname();
-
   return (
     <AppBar position="static" sx={{ backgroundColor: '#1a237e', marginBottom: 4 }}>
       <Container maxWidth="lg">
@@ -60,34 +56,6 @@ export default function Navigation() {
               </Box>
             </Link>
           </Box>
-          {/* <Box sx={{ display: 'flex', gap: 2 }}>
-            <Link href="/" passHref style={{ textDecoration: 'none' }}>
-              <Button 
-                color="inherit" 
-                startIcon={<HowToReg />}
-                sx={{ 
-                  backgroundColor: pathname === '/' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                  color: 'white',
-                  '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }
-                }}
-              >
-                Sign Up
-              </Button>
-            </Link>
-            <Link href="/registrations" passHref style={{ textDecoration: 'none' }}>
-              <Button 
-                color="inherit"
-                startIcon={<List />}
-                sx={{ 
-                  backgroundColor: pathname === '/registrations' ? 'rgba(255,255,255,0.1)' : 'transparent',
-                  color: 'white',
-                  '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }
-                }}
-              >
-                View Registrations
-              </Button>
-            </Link>
-          </Box> */}
         </Toolbar>
       </Container>
     </AppBar>
