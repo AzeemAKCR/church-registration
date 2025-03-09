@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Registration, { IRegistration } from '../../../models/Registration';
 
-type RegistrationInput = Omit<IRegistration, '_id' | 'createdAt'>;
+type RegistrationInput = Omit<IRegistration, 'createdAt' | 'updatedAt'>;
 
 export async function POST(request: NextRequest) {
   try {
