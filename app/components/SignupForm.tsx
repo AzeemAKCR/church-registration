@@ -1,5 +1,5 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 import {
   Box,
   TextField,
@@ -13,8 +13,8 @@ import {
   MenuItem,
   SelectChangeEvent,
   Alert,
-  CircularProgress
-} from '@mui/material';
+  CircularProgress,
+} from "@mui/material";
 
 interface FormData {
   firstName: string;
@@ -24,28 +24,39 @@ interface FormData {
   gradeLevel: string;
   address: string;
   description: string;
+  primaryNumber: string;
+  secondaryNumber: string;
 }
 
 const initialFormData: FormData = {
-  firstName: '',
-  lastName: '',
-  age: '3',
-  gender: 'male',
-  gradeLevel: '',
-  address: '',
-  description: ''
+  firstName: "",
+  lastName: "",
+  age: "3",
+  gender: "male",
+  gradeLevel: "",
+  address: "",
+  description: "",
+  primaryNumber: "",
+  secondaryNumber: "",
 };
 
 export default function SignupForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -55,10 +66,10 @@ export default function SignupForm() {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
+      const response = await fetch("/api/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -68,19 +79,19 @@ export default function SignupForm() {
       if (response.ok) {
         setSubmitStatus({
           success: true,
-          message: 'Registration successful!'
+          message: "Registration successful!",
         });
         setFormData(initialFormData);
       } else {
         setSubmitStatus({
           success: false,
-          message: data.error || 'Registration failed. Please try again.'
+          message: data.error || "Registration failed. Please try again.",
         });
       }
     } catch {
       setSubmitStatus({
         success: false,
-        message: 'Registration failed. Please try again.'
+        message: "Registration failed. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -88,14 +99,14 @@ export default function SignupForm() {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: 'auto', p: 2 }}>
+    <Box sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h5" gutterBottom align="center" sx={{ mb: 4 }}>
           Vacation Bible School Signup
         </Typography>
 
         {submitStatus && (
-          <Alert 
+          <Alert
             severity={submitStatus.success ? "success" : "error"}
             sx={{ mb: 3 }}
           >
@@ -135,7 +146,9 @@ export default function SignupForm() {
                   onChange={handleChange}
                 >
                   {Array.from({ length: 16 }, (_, i) => i + 3).map((age) => (
-                    <MenuItem key={age} value={age.toString()}>{age} years</MenuItem>
+                    <MenuItem key={age} value={age.toString()}>
+                      {age} years
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -153,6 +166,25 @@ export default function SignupForm() {
                   <MenuItem value="female">Female</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                label="Primary Mobile Number"
+                name="primaryNumber"
+                value={formData.primaryNumber}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Secondary Mobile Number"
+                name="secondaryNumber"
+                value={formData.secondaryNumber}
+                onChange={handleChange}
+              />
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
@@ -213,7 +245,7 @@ export default function SignupForm() {
                 {isSubmitting ? (
                   <CircularProgress size={24} color="inherit" />
                 ) : (
-                  'Submit Registration'
+                  "Submit Registration"
                 )}
               </Button>
             </Grid>

@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 if (!process.env.MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
 const MONGODB_URI: string = process.env.MONGODB_URI;
@@ -22,16 +22,16 @@ interface MongoDBError extends Error {
 async function connectDB(): Promise<void> {
   try {
     if (mongoose.connection.readyState === 1) {
-      console.log('Using existing MongoDB connection');
+      console.log("Using existing MongoDB connection");
       return;
     }
 
     await mongoose.connect(MONGODB_URI, options);
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
   } catch (error) {
     if (error instanceof Error) {
       const mongoError = error as MongoDBError;
-      console.error('Error connecting to MongoDB:', mongoError.message);
+      console.error("Error connecting to MongoDB:", mongoError.message);
       throw mongoError;
     }
     throw error;
