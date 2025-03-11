@@ -85,49 +85,53 @@ export default function RegistrationsPage() {
         gutterBottom
         sx={{ mb: 4, color: "#23217d" }}
       >
-        Registrations
+        {registrations.length > 0 ? "Registrations" : "No Registrations"}
       </Typography>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Age</StyledTableCell>
-              <StyledTableCell>Gender</StyledTableCell>
-              <StyledTableCell>Class</StyledTableCell>
-              <StyledTableCell>Address</StyledTableCell>
-              <StyledTableCell>Primary Number</StyledTableCell>
-              <StyledTableCell>Seconday Number</StyledTableCell>
-              <StyledTableCell>Comments</StyledTableCell>
-              <StyledTableCell>Date</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {registrations?.map((registration) => (
-              <StyledTableRow key={registration._id}>
-                <StyledTableCell>
-                  {registration.firstName} {registration.lastName}
-                </StyledTableCell>
-                <StyledTableCell>{registration.age}</StyledTableCell>
-                <StyledTableCell>{registration.gender}</StyledTableCell>
-                <StyledTableCell>{registration.gradeLevel}</StyledTableCell>
-                <StyledTableCell>{registration.address}</StyledTableCell>
-                <StyledTableCell>{registration.primaryNumber}</StyledTableCell>
-                <StyledTableCell>
-                  {registration.secondaryNumber}
-                </StyledTableCell>
-                <StyledTableCell>
-                  {registration.description || "-"}
-                </StyledTableCell>
-                <TableCell>
-                  {new Date(registration.createdAt).toLocaleDateString()}
-                </TableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {registrations.length > 0 && (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Name</StyledTableCell>
+                <StyledTableCell>Age</StyledTableCell>
+                <StyledTableCell>Gender</StyledTableCell>
+                <StyledTableCell>Class</StyledTableCell>
+                <StyledTableCell>Address</StyledTableCell>
+                <StyledTableCell>Primary Number</StyledTableCell>
+                <StyledTableCell>Seconday Number</StyledTableCell>
+                <StyledTableCell>Comments</StyledTableCell>
+                <StyledTableCell>Date</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {registrations?.map((registration) => (
+                <StyledTableRow key={registration._id}>
+                  <StyledTableCell>
+                    {registration.firstName} {registration.lastName}
+                  </StyledTableCell>
+                  <StyledTableCell>{registration.age}</StyledTableCell>
+                  <StyledTableCell>{registration.gender}</StyledTableCell>
+                  <StyledTableCell>{registration.gradeLevel}</StyledTableCell>
+                  <StyledTableCell>{registration.address}</StyledTableCell>
+                  <StyledTableCell>
+                    {registration.primaryNumber}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {registration.secondaryNumber}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {registration.description || "-"}
+                  </StyledTableCell>
+                  <TableCell>
+                    {new Date(registration.createdAt).toLocaleDateString()}
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Container>
   );
 }

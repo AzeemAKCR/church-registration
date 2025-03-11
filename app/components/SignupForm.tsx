@@ -53,6 +53,7 @@ export default function SignupForm() {
       | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       | SelectChangeEvent
   ) => {
+    setSubmitStatus(null);
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
