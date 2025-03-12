@@ -37,6 +37,9 @@ const RegistrationSchema = new mongoose.Schema(
     secondaryNumber: {
       type: String,
     },
+    transport: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -54,6 +57,7 @@ export type Registration = {
   gradeLevel: string;
   address: string;
   description?: string;
+  transport?: string;
   createdAt: string;
   updatedAt: string;
 };

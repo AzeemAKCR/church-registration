@@ -26,6 +26,7 @@ interface Registration {
   primaryNumber: string;
   secondaryNumber: string;
   description?: string;
+  transport?: string;
   createdAt: string;
 }
 
@@ -100,6 +101,7 @@ export default function RegistrationsPage() {
                 <StyledTableCell>Address</StyledTableCell>
                 <StyledTableCell>Primary Number</StyledTableCell>
                 <StyledTableCell>Seconday Number</StyledTableCell>
+                <StyledTableCell>Need Transport</StyledTableCell>
                 <StyledTableCell>Comments</StyledTableCell>
                 <StyledTableCell>Date</StyledTableCell>
               </TableRow>
@@ -119,6 +121,9 @@ export default function RegistrationsPage() {
                   </StyledTableCell>
                   <StyledTableCell>
                     {registration.secondaryNumber}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {registration.transport || "No"}
                   </StyledTableCell>
                   <StyledTableCell>
                     {registration.description || "-"}

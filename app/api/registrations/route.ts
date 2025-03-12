@@ -22,6 +22,7 @@ export async function GET() {
           address: String(doc.address),
           primaryNumber: String(doc.primaryNumber),
           secondaryNumber: String(doc.secondaryNumber),
+          transport: String(doc.transport),
           description: doc.description ? String(doc.description) : undefined,
           createdAt: new Date(doc.createdAt).toISOString(),
           updatedAt: new Date(doc.updatedAt).toISOString(),

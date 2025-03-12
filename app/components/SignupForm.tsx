@@ -26,6 +26,7 @@ interface FormData {
   description: string;
   primaryNumber: string;
   secondaryNumber: string;
+  transport: string;
 }
 
 const initialFormData: FormData = {
@@ -38,6 +39,7 @@ const initialFormData: FormData = {
   description: "",
   primaryNumber: "",
   secondaryNumber: "",
+  transport: "",
 };
 
 export default function SignupForm() {
@@ -187,7 +189,7 @@ export default function SignupForm() {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
                 <InputLabel>Class</InputLabel>
                 <Select
@@ -208,6 +210,20 @@ export default function SignupForm() {
                   <MenuItem value="10">Class 10</MenuItem>
                   <MenuItem value="11">Class 11</MenuItem>
                   <MenuItem value="12">Class 12</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required>
+                <InputLabel>Need Transport</InputLabel>
+                <Select
+                  name="transport"
+                  value={formData.transport}
+                  label="Transport"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="Yes">Yes</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
