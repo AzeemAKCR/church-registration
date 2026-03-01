@@ -22,11 +22,12 @@ export async function GET() {
           address: String(doc.address),
           primaryNumber: String(doc.primaryNumber),
           secondaryNumber: String(doc.secondaryNumber),
+          tshirtSize: String(doc.tshirtSize),
           transport: String(doc.transport),
           description: doc.description ? String(doc.description) : undefined,
           createdAt: new Date(doc.createdAt).toISOString(),
           updatedAt: new Date(doc.updatedAt).toISOString(),
-        } satisfies Registration)
+        }) satisfies Registration,
     );
 
     return NextResponse.json({ registrations });
@@ -37,7 +38,7 @@ export async function GET() {
       if (error.name === "MongooseServerSelectionError") {
         return NextResponse.json(
           { error: "Database connection timeout. Please try again." },
-          { status: 504 }
+          { status: 504 },
         );
       }
 
@@ -46,7 +47,7 @@ export async function GET() {
 
     return NextResponse.json(
       { error: "Failed to fetch registrations" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

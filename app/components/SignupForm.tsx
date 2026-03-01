@@ -27,12 +27,13 @@ interface FormData {
   primaryNumber: string;
   secondaryNumber: string;
   transport: string;
+  tshirtSize: string;
 }
 
 const initialFormData: FormData = {
   firstName: "",
   lastName: "",
-  age: "3",
+  age: "1",
   gender: "male",
   gradeLevel: "",
   address: "",
@@ -40,6 +41,7 @@ const initialFormData: FormData = {
   primaryNumber: "",
   secondaryNumber: "",
   transport: "",
+  tshirtSize: "",
 };
 
 export default function SignupForm() {
@@ -53,7 +55,7 @@ export default function SignupForm() {
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | SelectChangeEvent
+      | SelectChangeEvent,
   ) => {
     setSubmitStatus(null);
     const { name, value } = e.target;
@@ -67,6 +69,7 @@ export default function SignupForm() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
+    console.log("formData", formData);
 
     try {
       const response = await fetch("/api/register", {
@@ -148,7 +151,7 @@ export default function SignupForm() {
                   label="Age"
                   onChange={handleChange}
                 >
-                  {Array.from({ length: 16 }, (_, i) => i + 3).map((age) => (
+                  {Array.from({ length: 18 }, (_, i) => i + 1).map((age) => (
                     <MenuItem key={age} value={age.toString()}>
                       {age} years
                     </MenuItem>
@@ -198,6 +201,7 @@ export default function SignupForm() {
                   label="Class"
                   onChange={handleChange}
                 >
+                  <MenuItem value="below1">Below Class 1</MenuItem>
                   <MenuItem value="1">Class 1</MenuItem>
                   <MenuItem value="2">Class 2</MenuItem>
                   <MenuItem value="3">Class 3</MenuItem>
@@ -214,6 +218,31 @@ export default function SignupForm() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
+              {" "}
+              <FormControl fullWidth required>
+                {" "}
+                <InputLabel>T-Shirt Size</InputLabel>{" "}
+                <Select
+                  name="tshirtSize"
+                  value={formData.tshirtSize}
+                  label="T-Shirt Size"
+                  onChange={handleChange}
+                >
+                  <MenuItem value="40 cm">40 cm (0-6 months)</MenuItem>
+                  <MenuItem value="45 cm">45 cm (6-12 months)</MenuItem>
+                  <MenuItem value="50 cm">50 cm (1-2 years)</MenuItem>
+                  <MenuItem value="55 cm">55 cm (2-4 years)</MenuItem>
+                  <MenuItem value="60 cm">60 cm (4-6 years)</MenuItem>
+                  <MenuItem value="65 cm">65 cm (6-8 years)</MenuItem>
+                  <MenuItem value="70 cm">70 cm (8-10 years)</MenuItem>
+                  <MenuItem value="75 cm">75 cm (10-12 years)</MenuItem>
+                  <MenuItem value="80 cm">80 cm (12-14 years)</MenuItem>
+                  <MenuItem value="85 cm">85 cm (14-16 years)</MenuItem>
+                  <MenuItem value="90 cm">90 cm (16-18 years)</MenuItem>
+                </Select>{" "}
+              </FormControl>{" "}
+            </Grid>
+            <Grid item xs={12}>
               <FormControl fullWidth required>
                 <InputLabel>Need Transport</InputLabel>
                 <Select

@@ -40,10 +40,13 @@ const RegistrationSchema = new mongoose.Schema(
     transport: {
       type: String,
     },
+    tshirtSize: {
+      type: String,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export type Registration = {
@@ -55,6 +58,7 @@ export type Registration = {
   secondaryNumber: string;
   gender: "male" | "female";
   gradeLevel: string;
+  tshirtSize: string;
   address: string;
   description?: string;
   transport?: string;

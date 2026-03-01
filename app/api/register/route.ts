@@ -9,13 +9,15 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
     const data = (await request.json()) as RegistrationInput;
+    console.log("data", data);
+
     const registration = await RegistrationModel.create(data);
 
     return NextResponse.json(
       {
         registration,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Registration error:", error);
@@ -24,14 +26,14 @@ export async function POST(request: NextRequest) {
       if (error.name === "MongooseServerSelectionError") {
         return NextResponse.json(
           { error: "Database connection timeout. Please try again." },
-          { status: 504 }
+          { status: 504 },
         );
       }
 
       if (error.name === "ValidationError") {
         return NextResponse.json(
           { error: "Invalid registration data" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
